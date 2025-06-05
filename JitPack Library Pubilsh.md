@@ -1,22 +1,24 @@
+This guide will walk you through creating a Java Gradle library project and publishing it to JitPack, making it easily consumable by other JVM projects.
+
 Part 1: Creating a Java Gradle Library Project
-Prerequisites:
+Prerequisites
+Before you begin, ensure you have the following:
 
 Java Development Kit (JDK): Version 8 or higher.
-Gradle: You don't necessarily need to install Gradle globally, as the Gradle Wrapper (which we'll use) will handle it.
+Gradle: You don't need a global installation; the Gradle Wrapper handles it.
 Text Editor or IDE: IntelliJ IDEA, VS Code, Eclipse, etc.
 Git: Essential for version control and publishing to JitPack.
 GitHub Account: JitPack integrates directly with GitHub.
-Steps:
-
-Create a Project Directory:
-Open your terminal or command prompt and create a new directory for your library project.
+Steps
+1. Create a Project Directory
+Open your terminal or command prompt and create a new directory for your library project:
 
 Bash
 
 mkdir my-java-library
 cd my-java-library
-Initialize the Gradle Project:
-Inside your project directory, run the Gradle init task. This will set up the basic project structure.
+2. Initialize the Gradle Project
+Inside your project directory, run the Gradle init task to set up the basic project structure:
 
 Bash
 
@@ -25,8 +27,9 @@ You'll be prompted with a few questions. Choose the following options:
 
 Select type of build to generate: 2: Library
 Select implementation language: 1: Java
-Select build script DSL: 2: Groovy (or 1: Kotlin if you prefer Kotlin DSL for your build scripts)
+Select build script DSL: 2: Groovy (or 1: Kotlin if you prefer Kotlin DSL)
 For other questions, you can generally press Enter to accept the default values.
+
 This will create a project structure similar to this:
 
 my-java-library/
@@ -47,15 +50,13 @@ my-java-library/
         └── java/
             └── my/package/name/
                 └── LibraryTest.java
-Review Project Files:
-
+3. Review Project Files
 settings.gradle: This file defines the name of your project.
 
 Gradle
 
 rootProject.name = 'my-java-library'
-build.gradle: This is the main build script for your library.
-It will typically contain:
+build.gradle: This is the main build script for your library. It will typically contain:
 
 Gradle
 
@@ -88,7 +89,7 @@ group: This will be the groupId of your published library. It's recommended to u
 version: This is the initial version of your library. When you release a new version, you'll update this or use Git tags.
 java-library plugin: This plugin is crucial for creating a Java library, providing features like API and implementation separation.
 withJavadocJar() and withSourcesJar(): These are important for JitPack to generate Javadoc and source JARs, which are useful for consumers of your library.
-Write Your Library Code:
+4. Write Your Library Code
 Open src/main/java/my/package/name/Library.java (or whatever path was generated) and start writing your library's classes and methods.
 
 Example Library.java:
@@ -106,7 +107,7 @@ public class Library {
         return a + b;
     }
 }
-Write Tests (Optional but Recommended):
+5. Write Tests (Optional but Recommended)
 Open src/test/java/my/package/name/LibraryTest.java and write tests for your library.
 
 Example LibraryTest.java:
@@ -129,8 +130,8 @@ public class LibraryTest {
         assertEquals(5, Library.add(2, 3));
     }
 }
-Build and Test Your Library Locally:
-Run the build task to compile your code, run tests, and assemble the JAR file.
+6. Build and Test Your Library Locally
+Run the build task to compile your code, run tests, and assemble the JAR file:
 
 Bash
 
@@ -140,21 +141,20 @@ If everything is successful, you'll see BUILD SUCCESSFUL in the console. The com
 Part 2: Publishing to JitPack
 JitPack simplifies publishing JVM and Android libraries directly from Git repositories (like GitHub).
 
-Steps:
-
-Initialize Git Repository:
-If you haven't already, initialize a Git repository in your project directory.
+Steps
+1. Initialize Git Repository
+If you haven't already, initialize a Git repository in your project directory:
 
 Bash
 
 git init
 git add .
 git commit -m "Initial commit of Java library"
-Create a GitHub Repository:
+2. Create a GitHub Repository
 Go to GitHub and create a new public repository. Do not initialize it with a README, .gitignore, or license, as you already have your files.
 
-Link Local Repository to GitHub:
-Add the remote origin and push your code to GitHub.
+3. Link Local Repository to GitHub
+Add the remote origin and push your code to GitHub:
 
 Bash
 
@@ -163,7 +163,7 @@ git branch -M main
 git push -u origin main
 Replace your-username and your-repo-name with your actual GitHub username and repository name.
 
-Create a Git Release or Tag:
+4. Create a Git Release or Tag
 JitPack builds from Git releases or tags. This is how you define a specific version of your library for consumers.
 
 Using a Git Tag (Recommended for simple releases):
@@ -175,33 +175,31 @@ git push origin v1.0.0
 The tag name (v1.0.0) should match the version defined in your build.gradle file.
 
 Creating a GitHub Release:
+
 Go to your GitHub repository, click on "Releases" (usually on the right sidebar or under the "Code" tab), and then "Create a new release."
 
 Choose a tag (e.g., v1.0.0).
 Provide a release title and description.
 Click "Publish release."
-Go to JitPack.io and Look Up Your Repository:
-
+5. Go to JitPack.io and Look Up Your Repository
 Visit https://jitpack.io/.
 Sign in with your GitHub account (if you haven't already).
 In the "Look up" field, enter your GitHub repository URL (e.g., https://github.com/your-username/your-repo-name).
 Click the "Look up" button.
-Build Your Library on JitPack:
+6. Build Your Library on JitPack
 JitPack will now attempt to build your library. It looks for a build.gradle file in the root of your repository (or in a subfolder). If it finds a tag or release, it will try to build that specific version.
 
 You'll see the build status. It might take a few moments for the build to start and complete.
+
 If the build is successful, you'll see a green "Get it" button or "Build successful" message.
 If the build fails, you can click on the "Logs" to see the output and debug any issues. Common issues include incorrect Gradle configuration, missing plugins, or compilation errors.
-Using Your Published Library:
-
+Using Your Published Library
 Once JitPack successfully builds your library, you'll see instructions on how to use it in other Gradle projects.
 
 For consumers of your library (in their build.gradle or settings.gradle):
 
 Add JitPack repository:
-In your consuming project's settings.gradle (or build.gradle for older Gradle versions), add the JitPack Maven repository:
-
-settings.gradle (recommended for modern Gradle):
+In your consuming project's settings.gradle (recommended for modern Gradle):
 
 Gradle
 
@@ -225,7 +223,6 @@ com.github.your-username: This is your groupId derived from your GitHub username
 your-repo-name: This is your artifactId derived from your GitHub repository name.
 v1.0.0: This is the Git tag or release version you created.
 Using the library in Java code:
-
 Java
 
 import com.example.yourlibrary.Library; // Your library's package and class
@@ -236,8 +233,7 @@ public class Main {
         System.out.println("Sum: " + Library.add(10, 20));
     }
 }
-Tips for Success:
-
+Tips for Success
 Version Control: Always use Git and create proper tags/releases for your library versions. This is how JitPack identifies what to build.
 Build File Clarity: Keep your build.gradle file clean and well-configured. Ensure the java-library plugin is applied and group and version are correctly set.
 Javadoc and Sources: Including withJavadocJar() and withSourcesJar() in your build.gradle makes your library more user-friendly by providing documentation and source code when developers use it.
